@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class BallWaypointManager : MonoBehaviour
+public class BallController : MonoBehaviour
 {
     public Vector3 ArenaHalfDimensions = new Vector3(15,0,15);
 
@@ -54,12 +54,6 @@ public class BallWaypointManager : MonoBehaviour
 
     public void SetBallWaypoints(Vector3 destination, Vector3 midpoint)
     {
-        var p = gameObject.GetComponent<DOTweenPath>();
-
-        p.waypoints.Clear();
-        p.waypoints.Add(midpoint);
-        p.waypoints.Add(destination);
-
-        Debug.Log(p.waypoints);
+        
     }
 }
