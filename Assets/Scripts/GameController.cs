@@ -5,11 +5,14 @@ using DG.Tweening;
 
 public class GameController : MonoBehaviour
 {
-    public BallController Ball;
+    public GameObject Ball;
+    public BallPathManager BallPath;
 
     public List<GameObject> Players = new List<GameObject>();
 
     public bool isTeam1Ball = true;
+
+    public Vector3 CurrentBallDestination = new Vector3();
 
     // Start is called before the first frame update
     void Start()
@@ -25,12 +28,15 @@ public class GameController : MonoBehaviour
 
     public void BumpBall()
     {
-        //generate a new destination
+        //set new waypoints
+        BallPath.SetWBObjectStart(Ball.transform.position);
+        BallPath.SetRandomDestinationWPObject(isTeam1Ball);
+        BallPath.SetWPObjectMidPoint(5.0f);
 
-        //find the midpoint
-
-        //set the new waypoints in the ball path
+        BallPath.UpdateWaypoints();
 
         //restart the ball animation
+        BallPath.RestartPlayPath();
     }
+
 }

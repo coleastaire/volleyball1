@@ -10,10 +10,12 @@ public class BallController : MonoBehaviour
     public Vector3 CurrentDestination = new Vector3();
     public Vector3 CurrentPathMidpoint = new Vector3();
 
+    private DOTweenPath path;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        path = gameObject.GetComponent<DOTweenPath>();
     }
 
     // Update is called once per frame
@@ -22,7 +24,7 @@ public class BallController : MonoBehaviour
         
     }
 
-    public Vector3 GenerateRandomBallDestination(bool team1Ball)
+    public Vector3 SetRandomBallDestination(bool team1Ball)
     {
         //generate position
         float x = Random.Range(0.0f, ArenaHalfDimensions.x);
@@ -36,7 +38,7 @@ public class BallController : MonoBehaviour
         return newPos;
     }
 
-    public Vector3 GenerateBallPathMidPoint()
+    public Vector3 SetBallPathMidPoint()
     {
         //get current and destination, then flatten them to y = 0
         Vector3 a = gameObject.transform.position;
@@ -50,6 +52,11 @@ public class BallController : MonoBehaviour
 
         Debug.Log("Ball Midpoint: " + b);
         return b;
+    }
+
+    public void PlayBallPathFromCurrentPosition()
+    {
+
     }
 
     public void SetBallWaypoints(Vector3 destination, Vector3 midpoint)
