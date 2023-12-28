@@ -77,4 +77,9 @@ public class BallPathManager : MonoBehaviour
         Debug.Log("Ball Destination: " + newPos);
         return newPos;
     }
+
+    public Vector3 GetCurrentBallDestination()
+    {
+        return Waypoints[2];
+    }
 }
