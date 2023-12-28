@@ -651,10 +651,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PathSystem: 1
-  Waypoints:
-  - {x: 15, y: 0, z: 0}
-  - {x: 0, y: 0, z: 15}
-  - {x: -15, y: 0, z: 0}
+  WPObjects:
+  - {fileID: 1552792496}
+  - {fileID: 1625700657}
+  - {fileID: 1272847952}
 --- !u!135 &77537205
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1714,7 +1714,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1677436316}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &415900846
@@ -1744,9 +1745,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cab8aa66b8f968e65a7d41f4b1c1216b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Ball: {fileID: 0}
+  ServeTransform: {fileID: 1677436316}
+  HitHeight: 7.5
+  Ball: {fileID: 77537203}
+  BallPath: {fileID: 77537204}
   Players: []
   isTeam1Ball: 1
+  CurrentTouches: 0
+  CurrentBallDestination: {x: 0, y: 0, z: 0}
 --- !u!1 &417428129
 GameObject:
   m_ObjectHideFlags: 0
@@ -1804,7 +1810,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: DORestart
+  m_text: Restart Current Path
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -2459,9 +2465,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 415900846}
-        m_TargetAssemblyTypeName: BallWaypointManager, Assembly-CSharp
-        m_MethodName: GenerateRandomBallDestination
+      - m_Target: {fileID: 77537204}
+        m_TargetAssemblyTypeName: BallPathManager, Assembly-CSharp
+        m_MethodName: RestartPlayPath
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2665,9 +2671,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: DG.Tweening.DOTweenPath, DOTweenPro
-        m_MethodName: DOPlayForward
+      - m_Target: {fileID: 415900847}
+        m_TargetAssemblyTypeName: GameController, Assembly-CSharp
+        m_MethodName: BumpBall
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2920,9 +2926,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: DG.Tweening.DOTweenPath, DOTweenPro
-        m_MethodName: DOPlay
+      - m_Target: {fileID: 415900847}
+        m_TargetAssemblyTypeName: GameController, Assembly-CSharp
+        m_MethodName: ServeBall
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2970,6 +2976,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1228164525}
   m_CullTransparentMesh: 1
+--- !u!1 &1272847951
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1272847952}
+  m_Layer: 0
+  m_Name: WP3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1272847952
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1272847951}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 8.71, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1278714888
 GameObject:
   m_ObjectHideFlags: 0
@@ -7079,7 +7116,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: DOPlay
+  m_text: Serve Ball
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7254,7 +7291,7 @@ Transform:
   m_GameObject: {fileID: 1552792495}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.722688, y: -10.035626, z: -13.977884}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7291,7 +7328,7 @@ Transform:
   m_GameObject: {fileID: 1625700656}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.722688, y: -10.035626, z: -13.977884}
+  m_LocalPosition: {x: 3.7, y: 7.34, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7354,7 +7391,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: DOPlay Forward
+  m_text: Bump
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7431,6 +7468,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1663607126}
   m_CullTransparentMesh: 1
+--- !u!1 &1677436315
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1677436316}
+  m_Layer: 0
+  m_Name: ServeTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1677436316
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1677436315}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10.51, y: 2.3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 415900845}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1776383274
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11664,3 +11732,4 @@ SceneRoots:
   - {fileID: 662266196}
   - {fileID: 1552792496}
   - {fileID: 1625700657}
+  - {fileID: 1272847952}
