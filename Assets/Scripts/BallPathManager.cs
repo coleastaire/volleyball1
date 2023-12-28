@@ -33,8 +33,9 @@ public class BallPathManager : MonoBehaviour
 
     public void RestartPlayPath()
     {
+        gameObject.transform.DOKill();
         gameObject.transform.position = Waypoints[0];
-        gameObject.transform.DORestart();
+        //gameObject.transform.DORestart();
         gameObject.transform.DOPath(Waypoints, 3, PathSystem);
     }
 
