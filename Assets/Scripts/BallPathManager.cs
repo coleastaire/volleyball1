@@ -91,6 +91,20 @@ public class BallPathManager : MonoBehaviour
         return newPos;
     }
 
+    public Vector3 SetDestinationWPObject (bool team1Ball, Vector3 pos)
+    {
+        //generate position
+        float x = pos.x; 
+        if(team1Ball) { x *= -1; }
+        float z = pos.z;
+        Vector3 newPos = new Vector3(x, 0.0f, z);
+
+        WPObjects[2].position = newPos;
+
+        Debug.Log("Ball Destination: " + newPos);
+        return newPos;
+    }
+
     public Vector3 GetCurrentBallDestination()
     {
         return Waypoints[2];

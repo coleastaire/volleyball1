@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Events;
 
 public class GameController : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class GameController : MonoBehaviour
     }
 
     public Transform ServeTransform;
+    public Transform PassTransform;
     public float HitHeight = 5.0f;
     public GameObject Ball;
     public BallPathManager BallPath;
@@ -28,8 +30,13 @@ public class GameController : MonoBehaviour
     public bool isTeam1Ball = true;
     private bool isServe = true;
     public int CurrentTouches = 0;
+    private int touchType = 0;
 
     public Vector3 CurrentBallDestination = new Vector3();
+
+    public UnityEvent OnBump;
+    public UnityEvent OnSet;
+    public UnityEvent OnAttack;
 
     void Start()
     {
@@ -70,8 +77,24 @@ public class GameController : MonoBehaviour
             ServeBall();
         } else
         {
+            switch (CurrentTouches % 3)
+            {
+                case 0:
+                    BumpBall(); 
+                    OnBump.Invoke();
+                    break;
+                case 1:
+                    SetBall(); 
+                    OnSet.Invoke();
+                    break;
+                case 2:
+                    AttackBall(); 
+                    OnAttack.Invoke();
+                    break;
+                default:
+                    break;
+            }
             CountHit();
-            BumpBall();
         }
 
         SelectAndMoveActivePlayer();
@@ -91,12 +114,18 @@ public class GameController : MonoBehaviour
                 if(PlayersTeam1[0].DistanceTo(ballPos) >= PlayersTeam1[1].DistanceTo(ballPos))
                 {
                     //p1 closest or equal, give to p1
-                    PlayersTeam1[0].SetDestination(ballPos);
+                    PlayersTeam1[0].SetReceiveDestination(ballPos);
+                    PlayersTeam1[0].SetTouchType(CurrentTouches % 3);
                     Touch = PlayerRecentTouch.teammate1;
+
+                    PlayersTeam1[1].ResetPosition();
                 } else
                 {
-                    PlayersTeam1[1].SetDestination(ballPos);
+                    PlayersTeam1[1].SetReceiveDestination(ballPos);
+                    PlayersTeam1[1].SetTouchType(CurrentTouches % 3);
                     Touch = PlayerRecentTouch.teammate2;
+
+                    PlayersTeam1[0].ResetPosition();
                 }
             } else
             {
@@ -104,12 +133,18 @@ public class GameController : MonoBehaviour
                 if(Touch == PlayerRecentTouch.teammate1)
                 {
                     //p1 touched, give to p2
-                    PlayersTeam1[1].SetDestination(ballPos);
+                    PlayersTeam1[1].SetReceiveDestination(ballPos);
+                    PlayersTeam1[1].SetTouchType(CurrentTouches % 3);
                     Touch = PlayerRecentTouch.teammate2;
+
+                    PlayersTeam1[0].ResetPosition();
                 } else
                 {
-                    PlayersTeam1[0].SetDestination(ballPos);
+                    PlayersTeam1[0].SetReceiveDestination(ballPos);
+                    PlayersTeam1[0].SetTouchType(CurrentTouches % 3);
                     Touch = PlayerRecentTouch.teammate1;
+
+                    PlayersTeam1[1].ResetPosition();
                 }
             }
         } else
@@ -120,12 +155,18 @@ public class GameController : MonoBehaviour
                 if(PlayersTeam2[0].DistanceTo(ballPos) >= PlayersTeam2[1].DistanceTo(ballPos))
                 {
                     //p1 closest or equal, give to p1
-                    PlayersTeam2[0].SetDestination(ballPos);
+                    PlayersTeam2[0].SetReceiveDestination(ballPos);
+                    PlayersTeam2[0].SetTouchType(CurrentTouches % 3);
                     Touch = PlayerRecentTouch.teammate1;
+                    
+                    PlayersTeam2[1].ResetPosition();
                 } else
                 {
-                    PlayersTeam2[1].SetDestination(ballPos);
+                    PlayersTeam2[1].SetReceiveDestination(ballPos);
+                    PlayersTeam2[1].SetTouchType(CurrentTouches % 3);
                     Touch = PlayerRecentTouch.teammate2;
+
+                    PlayersTeam2[0].ResetPosition();
                 }
             } else
             {
@@ -133,12 +174,16 @@ public class GameController : MonoBehaviour
                 if(Touch == PlayerRecentTouch.teammate1)
                 {
                     //p1 touched, give to p2
-                    PlayersTeam2[1].SetDestination(ballPos);
+                    PlayersTeam2[1].SetReceiveDestination(ballPos);
+                    PlayersTeam2[1].SetTouchType(CurrentTouches % 3);
                     Touch = PlayerRecentTouch.teammate2;
+                    PlayersTeam2[0].ResetPosition();
                 } else
                 {
-                    PlayersTeam2[0].SetDestination(ballPos);
+                    PlayersTeam2[0].SetReceiveDestination(ballPos);
+                    PlayersTeam2[0].SetTouchType(CurrentTouches % 3);
                     Touch = PlayerRecentTouch.teammate1;
+                    PlayersTeam2[1].ResetPosition();
                 }
             }
         }
@@ -163,7 +208,35 @@ public class GameController : MonoBehaviour
     {
         //set new waypoints
         BallPath.SetWBObjectStart(Ball.transform.position);
-        BallPath.SetRandomDestinationWPObject(isTeam1Ball);
+        //BallPath.SetRandomDestinationWPObject(isTeam1Ball);
+        BallPath.SetDestinationWPObject(isTeam1Ball, PassTransform.position);
+        BallPath.SetWPObjectMidPoint(HitHeight);
+
+        BallPath.UpdateWaypoints();
+
+        //restart the ball animation
+        BallPath.RestartPlayPath();
+    }
+
+    public void SetBall()
+    {
+        //set new waypoints
+        BallPath.SetWBObjectStart(Ball.transform.position);
+        //BallPath.SetRandomDestinationWPObject(isTeam1Ball);
+        BallPath.SetDestinationWPObject(isTeam1Ball, PassTransform.position);
+        BallPath.SetWPObjectMidPoint(HitHeight);
+
+        BallPath.UpdateWaypoints();
+
+        //restart the ball animation
+        BallPath.RestartPlayPath();
+    }
+
+    public void AttackBall()
+    {
+        //set new waypoints
+        BallPath.SetWBObjectStart(Ball.transform.position);
+        BallPath.SetRandomDestinationWPObject(!isTeam1Ball); //DONT FORGET ABOUT THIS ! SYMBOL IN THE PARAMETERRRRR HACKYYYYYy:w
         BallPath.SetWPObjectMidPoint(HitHeight);
 
         BallPath.UpdateWaypoints();
@@ -179,9 +252,9 @@ public class GameController : MonoBehaviour
 
         CurrentTouches++;
 
-        int isFirstTouch = (CurrentTouches % 3);
+        touchType = (CurrentTouches % 3);
 
-        if(isFirstTouch == 1)
+        if(touchType == 1)
         {
             //dont change team
         } else
@@ -189,13 +262,28 @@ public class GameController : MonoBehaviour
 
         }
 
-        if(CurrentTouches == 3)
+        if((CurrentTouches % 3) == 0)
         {
             isTeam1Ball = !isTeam1Ball;
             //reset touches
             CurrentTouches = 0;
             //reset hits
             Touch = PlayerRecentTouch.none;
+
+            //reset position of players without posession
+            if (isTeam1Ball)
+            {
+                foreach (PlayerController n in PlayersTeam2)
+                {
+                    n.ResetPosition();
+                }
+            } else
+            {
+                foreach (PlayerController n in PlayersTeam1)
+                {
+                    n.ResetPosition();
+                }
+            }
         }
         else
         {
