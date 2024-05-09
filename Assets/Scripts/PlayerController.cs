@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     public bool isTeam1 = true;
     private NavMeshAgent Agent;
 
+    private bool touchedBall = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +22,16 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        //check if colliding with ball
+        if(other.CompareTag("Ball"))
+        {
+            Debug.Log("Player touched Ball.");
+            SetTouchedBall(true);
+        }
+    }
+
     public void SetDestination(Vector3 destination)
     {
         Agent.destination = destination;
@@ -28,5 +40,15 @@ public class PlayerController : MonoBehaviour
     public float DistanceTo(Vector3 target)
     {
         return Vector3.Distance(target, gameObject.transform.position);
+    }
+
+    public void SetTouchedBall(bool touched)
+    {
+        touchedBall = touched;
+    }
+
+    public bool GetTouchedBall()
+    {
+        return touchedBall;
     }
 }

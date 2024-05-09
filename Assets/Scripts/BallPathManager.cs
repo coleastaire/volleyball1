@@ -6,10 +6,17 @@ using DG.Tweening;
 public class BallPathManager : MonoBehaviour
 {
     public PathType PathSystem = PathType.CatmullRom;
+    public float BallFlightTime = 2.0f;
+    public Ease EaseType = Ease.Linear;
+
+    public bool UseCustomBallSpeedCurve = false;
+    public AnimationCurve BallSpeedCurve;
 
     public Transform[] WPObjects = new Transform[3];
 
     private Vector3[] Waypoints = new Vector3[3];
+
+    public Transform BallDestinationDecal;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +36,9 @@ public class BallPathManager : MonoBehaviour
         {
             Waypoints[i] = WPObjects[i].position;
         }
+
+        //set decal
+        SetDestinationDecalPosition();
     }
 
     public void RestartPlayPath()
@@ -36,7 +46,10 @@ public class BallPathManager : MonoBehaviour
         gameObject.transform.DOKill();
         gameObject.transform.position = Waypoints[0];
         //gameObject.transform.DORestart();
-        gameObject.transform.DOPath(Waypoints, 3, PathSystem);
+        if (UseCustomBallSpeedCurve)
+            gameObject.transform.DOPath(Waypoints, BallFlightTime, PathSystem).SetEase(BallSpeedCurve);
+        else
+            gameObject.transform.DOPath(Waypoints, BallFlightTime, PathSystem).SetEase(EaseType);
     }
 
     
@@ -67,9 +80,9 @@ public class BallPathManager : MonoBehaviour
     public Vector3 SetRandomDestinationWPObject(bool team1Ball)
     {
         //generate position
-        float x = Random.Range(0.0f, 15);
+        float x = Random.Range(0.0f, 8f);
         if(team1Ball) { x *= -1; }
-        float z = Random.Range(-(7.5f), 7.5f);
+        float z = Random.Range(-(8f), 8f);
         Vector3 newPos = new Vector3(x, 0.0f, z);
 
         WPObjects[2].position = newPos;
@@ -81,5 +94,10 @@ public class BallPathManager : MonoBehaviour
     public Vector3 GetCurrentBallDestination()
     {
         return Waypoints[2];
+    }
+
+    public void SetDestinationDecalPosition()
+    {
+        BallDestinationDecal.position = GetCurrentBallDestination();
     }
 }

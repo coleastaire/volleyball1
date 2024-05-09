@@ -17,6 +17,9 @@ public class GameController : MonoBehaviour
     public GameObject Ball;
     public BallPathManager BallPath;
 
+    public GameObject Team1Ground;
+    public GameObject Team2Ground;
+
     public List<PlayerController> PlayersTeam1 = new List<PlayerController>();
     public List<PlayerController> PlayersTeam2 = new List<PlayerController>();
 
@@ -30,12 +33,34 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        Collider ballCollider = Ball.GetComponent<Collider>();
+        if (ballCollider == null)
+            Debug.Log("Ball Collider not found.");
+
+        Collider team1GroundCollider = Team1Ground.GetComponent<Collider>();
+        if (team1GroundCollider == null)
+            Debug.Log("Team 1 Ground Collider not found.");
+
+        Collider team2GroundCollider = Team2Ground.GetComponent<Collider>();
+        if (team2GroundCollider == null)
+            Debug.Log("Team 2 Ground Collider not found.");
+
         ResetGame();
     }
 
     void Update()
     {
-        
+        //when the ball collides with a player, step the game flow
+        //if the ball collides with the ground, reset the game
+        if(CheckPlayerBallCollision() == true)
+        {
+            GameStepEvent();
+        }
+
+        if(CheckFloorBallCollision() == true)
+        {
+            ResetGame();
+        }
     }
 
     public void GameStepEvent()
@@ -154,17 +179,66 @@ public class GameController : MonoBehaviour
 
         CurrentTouches++;
 
-        int isFirstTouch = (CurrentTouches % 2);
+        int isFirstTouch = (CurrentTouches % 3);
 
         if(isFirstTouch == 1)
         {
             //dont change team
         } else
         {
+
+        }
+
+        if(CurrentTouches == 3)
+        {
             isTeam1Ball = !isTeam1Ball;
+            //reset touches
+            CurrentTouches = 0;
             //reset hits
             Touch = PlayerRecentTouch.none;
         }
+        else
+        {
+            //dont change teams
+        }
+    }
+
+    // Function to check collisions between players and the ball
+    private bool CheckPlayerBallCollision()
+    {
+        foreach (PlayerController player in PlayersTeam1)
+        {
+            if (player.GetTouchedBall() == true)
+            {
+                // Player successfully reached the ball
+                Debug.Log("Player from Team 1 reached the ball!");
+                player.SetTouchedBall(false);
+                return true;
+            }
+        }
+
+        foreach (PlayerController player in PlayersTeam2)
+        {
+            if (player.GetTouchedBall() == true)
+            {
+                // Player successfully reached the ball
+                Debug.Log("Player from Team 2 reached the ball!");
+                player.SetTouchedBall(false);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool CheckFloorBallCollision()
+    {
+        if(Ball.transform.position == BallPath.GetCurrentBallDestination())
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public void StartGame()
