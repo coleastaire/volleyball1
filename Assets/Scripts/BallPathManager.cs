@@ -53,7 +53,7 @@ public class BallPathManager : MonoBehaviour
     }
 
     
-    public void SetWBObjectStart(Vector3 newPosition)
+    public void SetWPObjectStart(Vector3 newPosition)
     {
         WPObjects[0].position = newPosition;
         Debug.Log("Ball Path Start: " + newPosition);
@@ -103,6 +103,35 @@ public class BallPathManager : MonoBehaviour
 
         Debug.Log("Ball Destination: " + newPos);
         return newPos;
+    }
+
+    public void SetBallPathRandomDestination(bool team1Ball, Vector3 startPos, float height, float duration)
+    {
+        SetWPObjectStart(startPos);
+        SetRandomDestinationWPObject(team1Ball);
+        SetWPObjectMidPoint(height);
+        BallFlightTime = duration;
+    }
+
+    public void SetBallPath(bool team1Ball, Vector3 startPos, Vector3 endPos, float height, float duration)
+    {
+        SetWPObjectStart(startPos);
+        SetDestinationWPObject(team1Ball, endPos);
+        SetWPObjectMidPoint(height);
+        BallFlightTime = duration;
+    }
+    public void SetBallPathRandomDestination(bool team1Ball, Vector3 startPos, float height)
+    {
+        SetWPObjectStart(startPos);
+        SetRandomDestinationWPObject(team1Ball);
+        SetWPObjectMidPoint(height);
+    }
+
+    public void SetBallPath(bool team1Ball, Vector3 startPos, Vector3 endPos, float height)
+    {
+        SetWPObjectStart(startPos);
+        SetDestinationWPObject(team1Ball, endPos);
+        SetWPObjectMidPoint(height);
     }
 
     public Vector3 GetCurrentBallDestination()

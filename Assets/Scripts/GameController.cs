@@ -13,9 +13,17 @@ public class GameController : MonoBehaviour
         teammate2
     }
 
-    public Transform ServeTransform;
-    public Transform PassTransform;
-    public float HitHeight = 5.0f;
+    public Transform ServeStartTransform;
+    public Transform PassDestinationTransform;
+    public Transform AttackDestinationTransform;
+
+    public float PassHeight = 7.0f;
+    public float PassDuration = 2.5f;
+    public float SetHeight = 5.0f;
+    public float SetDuration = 2.0f;
+    public float AttackHeight = 2.0f;
+    public float AttackDuration = 1.0f;
+
     public GameObject Ball;
     public BallPathManager BallPath;
 
@@ -192,9 +200,7 @@ public class GameController : MonoBehaviour
     public void ServeBall()
     {
         //set new waypoints, starting from serve position
-        BallPath.SetWBObjectStart(ServeTransform.position);
-        BallPath.SetRandomDestinationWPObject(isTeam1Ball);
-        BallPath.SetWPObjectMidPoint(HitHeight);
+        BallPath.SetBallPathRandomDestination(isTeam1Ball, ServeStartTransform.position, PassHeight);
 
         BallPath.UpdateWaypoints();
 
@@ -207,10 +213,7 @@ public class GameController : MonoBehaviour
     public void BumpBall()
     {
         //set new waypoints
-        BallPath.SetWBObjectStart(Ball.transform.position);
-        //BallPath.SetRandomDestinationWPObject(isTeam1Ball);
-        BallPath.SetDestinationWPObject(isTeam1Ball, PassTransform.position);
-        BallPath.SetWPObjectMidPoint(HitHeight);
+        BallPath.SetBallPath(isTeam1Ball, Ball.transform.position, PassDestinationTransform.position, PassHeight);
 
         BallPath.UpdateWaypoints();
 
@@ -221,10 +224,7 @@ public class GameController : MonoBehaviour
     public void SetBall()
     {
         //set new waypoints
-        BallPath.SetWBObjectStart(Ball.transform.position);
-        //BallPath.SetRandomDestinationWPObject(isTeam1Ball);
-        BallPath.SetDestinationWPObject(isTeam1Ball, PassTransform.position);
-        BallPath.SetWPObjectMidPoint(HitHeight);
+        BallPath.SetBallPath(isTeam1Ball, Ball.transform.position, PassDestinationTransform.position, SetHeight);
 
         BallPath.UpdateWaypoints();
 
@@ -235,9 +235,7 @@ public class GameController : MonoBehaviour
     public void AttackBall()
     {
         //set new waypoints
-        BallPath.SetWBObjectStart(Ball.transform.position);
-        BallPath.SetRandomDestinationWPObject(!isTeam1Ball); //DONT FORGET ABOUT THIS ! SYMBOL IN THE PARAMETERRRRR HACKYYYYYy:w
-        BallPath.SetWPObjectMidPoint(HitHeight);
+        BallPath.SetBallPathRandomDestination(!isTeam1Ball, Ball.transform.position, AttackHeight);//DONT FORGET ABOUT THIS ! SYMBOL IN THE PARAMETERRRRR HACKYYYYYy:w
 
         BallPath.UpdateWaypoints();
 
